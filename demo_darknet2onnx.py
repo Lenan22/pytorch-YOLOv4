@@ -10,22 +10,26 @@ from tool.utils import *
 from tool.darknet2onnx import *
 
 
-def main(cfg_file, namesfile, weight_file, image_path, batch_size):
+# def main(cfg_file, namesfile, weight_file):
+def main(cfg_file, weight_file):
+    transform_to_onnx(cfg_file, weight_file)
 
-    if batch_size <= 0:
-        onnx_path_demo = transform_to_onnx(cfg_file, weight_file, batch_size)
-    else:
-        # Transform to onnx as specified batch size
-        transform_to_onnx(cfg_file, weight_file, batch_size)
+    # if batch_size <= 0:
+    #     onnx_path_demo = transform_to_onnx(cfg_file, weight_file, batch_size)
+    # else:
+    #     # Transform to onnx as specified batch size
+    #     transform_to_onnx(cfg_file, weight_file, batch_size)
+
+
         # Transform to onnx as demo
-        onnx_path_demo = transform_to_onnx(cfg_file, weight_file, 1)
+    #     onnx_path_demo = transform_to_onnx(cfg_file, weight_file, 1)
 
-    session = onnxruntime.InferenceSession(onnx_path_demo)
-    # session = onnx.load(onnx_path)
-    print("The model expects input shape: ", session.get_inputs()[0].shape)
+    # session = onnxruntime.InferenceSession(onnx_path_demo)
+    # # session = onnx.load(onnx_path)
+    # print("The model expects input shape: ", session.get_inputs()[0].shape)
 
-    image_src = cv2.imread(image_path)
-    detect(session, image_src, namesfile)
+    # image_src = cv2.imread(image_path)
+    # detect(session, image_src, namesfile)
 
 
 
@@ -54,14 +58,18 @@ def detect(session, image_src, namesfile):
 
 
 if __name__ == '__main__':
-    print("Converting to onnx and running demo ...")
-    if len(sys.argv) == 6:
-        cfg_file = sys.argv[1]
-        namesfile = sys.argv[2]
-        weight_file = sys.argv[3]
-        image_path = sys.argv[4]
-        batch_size = int(sys.argv[5])
-        main(cfg_file, namesfile, weight_file, image_path, batch_size)
-    else:
-        print('Please run this way:\n')
-        print('  python demo_onnx.py <cfgFile> <namesFile> <weightFile> <imageFile> <batchSize>')
+    cfg_file = sys.argv[1]
+    weight_file = sys.argv[2]
+    main(cfg_file, weight_file)
+
+    # print("Converting to onnx and running demo ...")
+    # if len(sys.argv) == 6:
+    #     cfg_file = sys.argv[1]
+    #     namesfile = sys.argv[2]
+    #     weight_file = sys.argv[3]
+    #     image_path = sys.argv[4]
+    #     batch_size = int(sys.argv[5])
+    #     main(cfg_file, namesfile, weight_file, image_path, batch_size)
+    # else:
+    #     print('Please run this way:\n')
+    #     print('  python demo_onnx.py <cfgFile> <namesFile> <weightFile> <imageFile> <batchSize>')
